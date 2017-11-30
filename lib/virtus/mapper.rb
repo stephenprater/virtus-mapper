@@ -14,7 +14,7 @@ module Virtus
       @attr_set = init_attr_set
       @raw_attributes = HWIA.new(attrs)
       @nil_value_keys = @raw_attributes.collect { |k, v| k if v.nil? }.compact
-      super(mapped_attributes)
+      super(raw_attributes.merge(mapped_attributes))
     end
 
     def add_attributes(mod)
@@ -43,6 +43,7 @@ module Virtus
 
     def mapped_attributes
       attrs = raw_attributes.clone
+
       attrs.tap do |h|
         attributes_to_map_by_symbol(attrs).each do |att|
           h[att.name] = h.delete(from(att))
